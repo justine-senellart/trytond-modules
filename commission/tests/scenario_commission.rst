@@ -23,12 +23,12 @@ Create database::
 
 Install commission::
 
-    >>> Module = Model.get('ir.module.module')
+    >>> Module = Model.get('ir.module')
     >>> module, = Module.find([
     ...         ('name', '=', 'commission'),
     ...         ])
     >>> module.click('install')
-    >>> Wizard('ir.module.module.install_upgrade').execute('upgrade')
+    >>> Wizard('ir.module.install_upgrade').execute('upgrade')
 
 Create company::
 
@@ -141,6 +141,7 @@ Create invoice::
     >>> line = invoice.lines.new()
     >>> line.product = product
     >>> line.quantity = 1
+    >>> line.unit_price = Decimal(100)
     >>> invoice.save()
 
 Post invoice::

@@ -344,7 +344,7 @@ msgstr "Extracte"
 
 msgctxt "model:ir.action.act_window.domain,name:act_statement_form_domain_all"
 msgid "All"
-msgstr "Tots"
+msgstr "Tot"
 
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_statement_form_domain_draft"
@@ -414,10 +414,6 @@ msgid "Draft"
 msgstr "Esborrany"
 
 msgctxt "odt:account.statement:"
-msgid "E-Mail:"
-msgstr "Correu electrònic:"
-
-msgctxt "odt:account.statement:"
 msgid "Journal:"
 msgstr "Diari:"
 
@@ -430,20 +426,12 @@ msgid "Party"
 msgstr "Tercer"
 
 msgctxt "odt:account.statement:"
-msgid "Phone:"
-msgstr "Telèfon:"
-
-msgctxt "odt:account.statement:"
 msgid "Statement"
 msgstr "Extracte"
 
 msgctxt "odt:account.statement:"
 msgid "Total"
 msgstr "Total"
-
-msgctxt "odt:account.statement:"
-msgid "VAT Number:"
-msgstr "CIF/NIF:"
 
 msgctxt "selection:account.statement,state:"
 msgid "Canceled"

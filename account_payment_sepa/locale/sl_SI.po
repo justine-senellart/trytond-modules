@@ -22,7 +22,7 @@ msgstr "Štetje SEPA soglasij"
 
 msgctxt "field:account.payment,sepa_end_to_end_id:"
 msgid "SEPA End To End ID"
-msgstr "ID SEPA End-to-End "
+msgstr "ID SEPA End-to-End"
 
 msgctxt "field:account.payment,sepa_instruction_id:"
 msgid "SEPA Instruction ID"
@@ -186,7 +186,7 @@ msgstr "Zapisal"
 
 msgctxt "field:party.party,sepa_creditor_identifier:"
 msgid "SEPA Creditor Identifier"
-msgstr "Identifikacija  SEPA upnika"
+msgstr "Identifikacija SEPA upnika"
 
 msgctxt "field:party.party,sepa_creditor_identifier_used:"
 msgid "SEPA Creditor Identifier Used"
@@ -315,10 +315,6 @@ msgid "Direct Debit MANDATE"
 msgstr "Soglasje direktne bremenitve"
 
 msgctxt "odt:account.payment.sepa.mandate:"
-msgid "E-Mail:"
-msgstr "E-pošta:"
-
-msgctxt "odt:account.payment.sepa.mandate:"
 msgid "Location"
 msgstr "Lokacija"
 
@@ -329,10 +325,6 @@ msgstr "Naziv plačnika"
 msgctxt "odt:account.payment.sepa.mandate:"
 msgid "One-off payment"
 msgstr "Enkratno plačilo"
-
-msgctxt "odt:account.payment.sepa.mandate:"
-msgid "Phone:"
-msgstr "Telefon:"
 
 msgctxt "odt:account.payment.sepa.mandate:"
 msgid "Postal code"
@@ -361,10 +353,6 @@ msgstr "Ulica"
 msgctxt "odt:account.payment.sepa.mandate:"
 msgid "Type of payment"
 msgstr "Vrsta plačila"
-
-msgctxt "odt:account.payment.sepa.mandate:"
-msgid "VAT Number:"
-msgstr "DDV številka:"
 
 msgctxt "odt:account.payment.sepa.mandate:"
 msgid "Your account number"
@@ -461,6 +449,10 @@ msgstr "Vhod"
 msgctxt "selection:account.payment.sepa.message,type:"
 msgid "OUT"
 msgstr "Izhod"
+
+msgctxt "view:account.configuration:"
+msgid "SEPA"
+msgstr "SEPA"
 
 msgctxt "view:account.payment.group:"
 msgid "Generate Message"

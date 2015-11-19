@@ -3,8 +3,9 @@
 from collections import defaultdict
 
 from sql import Null
+from sql.conditionals import Case
 
-from trytond.model import Model, ModelView, ModelSQL, fields
+from trytond.model import Model, ModelView, ModelSQL, fields, Unique
 from trytond.pyson import If, Eval
 from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, StateAction, StateTransition, \
@@ -40,7 +41,7 @@ class Level(ModelSQL, ModelView):
     @staticmethod
     def order_sequence(tables):
         table, _ = tables[None]
-        return [table.sequence == Null, table.sequence]
+        return [Case((table.sequence == Null, 0), else_=1), table.sequence]
 
     def get_rec_name(self, name):
         return '%s@%s' % (self.procedure.levels.index(self),
@@ -111,8 +112,9 @@ class Dunning(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(Dunning, cls).__setup__()
+        table = cls.__table__()
         cls._sql_constraints = [
-            ('line_unique', 'UNIQUE(line)',
+            ('line_unique', Unique(table, table.line),
                 'Line can be used only once on dunning.'),
             ]
 

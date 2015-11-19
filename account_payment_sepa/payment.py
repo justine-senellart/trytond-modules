@@ -12,7 +12,8 @@ from lxml import etree
 from sql import Literal
 
 from trytond.pool import PoolMeta, Pool
-from trytond.model import ModelSQL, ModelView, Workflow, fields, dualmethod
+from trytond.model import (ModelSQL, ModelView, Workflow, fields, dualmethod,
+    Unique)
 from trytond.pyson import Eval, If
 from trytond.transaction import Transaction
 from trytond.tools import reduce_ids, grouped_slice
@@ -351,7 +352,11 @@ class Mandate(Workflow, ModelSQL, ModelView):
     scheme = fields.Selection([
             ('CORE', 'Core'),
             ('B2B', 'Business to Business'),
-            ], 'Scheme', required=True)
+            ], 'Scheme', required=True,
+        states={
+            'readonly': Eval('state').in_(['validated', 'canceled']),
+            },
+        depends=['state'])
     scheme_string = scheme.translated('scheme')
     signature_date = fields.Date('Signature Date',
         states={
@@ -394,8 +399,9 @@ class Mandate(Workflow, ModelSQL, ModelView):
                     'invisible': Eval('state') != 'requested',
                     },
                 })
+        t = cls.__table__()
         cls._sql_constraints = [
-            ('identification_unique', 'UNIQUE(company, identification)',
+            ('identification_unique', Unique(t, t.company, t.identification),
                 'The identification of the SEPA mandate must be unique '
                 'in a company.'),
             ]

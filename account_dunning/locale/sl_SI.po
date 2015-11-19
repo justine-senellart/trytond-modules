@@ -262,6 +262,10 @@ msgctxt "selection:account.dunning,state:"
 msgid "Draft"
 msgstr "V pripravi"
 
+msgctxt "view:account.configuration:"
+msgid "Dunning"
+msgstr "Izterjava"
+
 msgctxt "view:account.dunning.create.start:"
 msgid "Create Dunning"
 msgstr "Izterjava"

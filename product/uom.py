@@ -4,7 +4,7 @@ from __future__ import division
 from decimal import Decimal
 from sql import Table
 
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import ModelView, ModelSQL, fields, Check
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
@@ -68,8 +68,9 @@ class Uom(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(Uom, cls).__setup__()
+        t = cls.__table__()
         cls._sql_constraints += [
-            ('non_zero_rate_factor', 'CHECK((rate != 0.0) or (factor != 0.0))',
+            ('non_zero_rate_factor', Check(t, (t.rate != 0) | (t.factor != 0)),
                 'Rate and factor can not be both equal to zero.')
             ]
         cls._order.insert(0, ('name', 'ASC'))
@@ -206,36 +207,50 @@ class Uom(ModelSQL, ModelView):
             return 'rate'
 
     @classmethod
-    def compute_qty(cls, from_uom, qty, to_uom=None, round=True):
+    def compute_qty(cls, from_uom, qty, to_uom, round=True):
         """
         Convert quantity for given uom's.
         """
-        if not from_uom or not qty or not to_uom:
+        if not qty or (from_uom is None and to_uom is None):
             return qty
+        if from_uom is None:
+            raise ValueError("missing from_uom")
+        if to_uom is None:
+            raise ValueError("missing to_uom")
         if from_uom.category.id != to_uom.category.id:
-            return qty
+            raise ValueError("cannot convert between %s and %s"
+                    % (from_uom.category.name, to_uom.category.name))
+
         if from_uom.accurate_field == 'factor':
             amount = qty * from_uom.factor
         else:
             amount = qty / from_uom.rate
-        if to_uom is not None:
-            if to_uom.accurate_field == 'factor':
-                amount = amount / to_uom.factor
-            else:
-                amount = amount * to_uom.rate
-            if round:
-                amount = cls.round(amount, to_uom.rounding)
+
+        if to_uom.accurate_field == 'factor':
+            amount = amount / to_uom.factor
+        else:
+            amount = amount * to_uom.rate
+
+        if round:
+            amount = cls.round(amount, to_uom.rounding)
+
         return amount
 
     @classmethod
-    def compute_price(cls, from_uom, price, to_uom=None):
+    def compute_price(cls, from_uom, price, to_uom):
         """
         Convert price for given uom's.
         """
-        if not from_uom or not price or not to_uom:
+        if not price or (from_uom is None and to_uom is None):
             return price
+        if from_uom is None:
+            raise ValueError("missing from_uom")
+        if to_uom is None:
+            raise ValueError("missing to_uom")
         if from_uom.category.id != to_uom.category.id:
-            return price
+            raise ValueError('cannot convert between %s and %s'
+                    % (from_uom.category.name, to_uom.category.name))
+
         factor_format = '%%.%df' % cls.factor.digits[1]
         rate_format = '%%.%df' % cls.rate.digits[1]
 

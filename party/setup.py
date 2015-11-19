@@ -41,7 +41,7 @@ if minor_version % 2:
         'hg+http://hg.tryton.org/modules/%s#egg=%s-%s' % (
             name[8:], name, version))
 
-requires = ['python-sql >= 0.4']
+requires = ['python-sql >= 0.4', 'python-stdnum']
 for dep in info.get('depends', []):
     if not re.match(r'(ir|res|webdav)(\W|$)', dep):
         requires.append(get_require_version('trytond_%s' % dep))
@@ -82,6 +82,9 @@ setup(name=name,
         'Natural Language :: English',
         'Natural Language :: French',
         'Natural Language :: German',
+        'Natural Language :: Hungarian',
+        'Natural Language :: Italian',
+        'Natural Language :: Portuguese (Brazilian)',
         'Natural Language :: Russian',
         'Natural Language :: Slovenian',
         'Natural Language :: Spanish',
@@ -94,7 +97,7 @@ setup(name=name,
     license='GPL-3',
     install_requires=requires,
     extras_require={
-        'VAT': ['vatnumber', 'python-stdnum'],
+        'VAT': ['python-stdnum'],
         },
     zip_safe=False,
     entry_points="""

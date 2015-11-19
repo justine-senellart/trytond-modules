@@ -620,11 +620,11 @@ msgstr "San Cristobo y Nevis"
 
 msgctxt "model:country.country,name:kp"
 msgid "Korea, Democratic People's Republic of"
-msgstr "República Popular Democrática de Corea"
+msgstr "Corea, República Democrática Popular de"
 
 msgctxt "model:country.country,name:kr"
 msgid "Korea, Republic of"
-msgstr "República de Corea"
+msgstr "Corea, República de"
 
 msgctxt "model:country.country,name:kw"
 msgid "Kuwait"
@@ -712,7 +712,7 @@ msgstr "Islas Marshall"
 
 msgctxt "model:country.country,name:mk"
 msgid "Macedonia, Republic of"
-msgstr "República de Macedonia"
+msgstr "Macedonia, República de"
 
 msgctxt "model:country.country,name:ml"
 msgid "Mali"
@@ -980,7 +980,7 @@ msgstr "El Salvador"
 
 msgctxt "model:country.country,name:sx"
 msgid "Sint Maarten (Dutch part)"
-msgstr "Isla de San Martín (zona holandesa)"
+msgstr "Isla de San Martín (zona holandsea)"
 
 msgctxt "model:country.country,name:sy"
 msgid "Syrian Arab Republic"
@@ -1052,7 +1052,7 @@ msgstr "Taiwán, Provincia de China"
 
 msgctxt "model:country.country,name:tz"
 msgid "Tanzania, United Republic of"
-msgstr "República unida de Tanzania"
+msgstr "Tanzania, República unida de"
 
 msgctxt "model:country.country,name:ua"
 msgid "Ukraine"
@@ -1088,7 +1088,7 @@ msgstr "San Vicente y las Granadinas"
 
 msgctxt "model:country.country,name:ve"
 msgid "Venezuela, Bolivarian Republic of"
-msgstr "República Bolivariana de Venezuela"
+msgstr "Venezuela, República Bolivariana de"
 
 msgctxt "model:country.country,name:vg"
 msgid "Virgin Islands, British"
@@ -2568,7 +2568,7 @@ msgstr "Liège"
 
 msgctxt "model:country.subdivision,name:be-wlx"
 msgid "Luxembourg"
-msgstr "Luxemburgo"
+msgstr "Luxembourg"
 
 msgctxt "model:country.subdivision,name:be-wna"
 msgid "Namur"
@@ -20560,7 +20560,7 @@ msgstr "Área administrativa"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Administrative atoll"
-msgstr "Conjunto Administrativo"
+msgstr "Conjunto administrativo"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Arctic Region"
@@ -20600,7 +20600,7 @@ msgstr "Comunidades autónomas"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Autonomous community"
-msgstr "Comunidad Autonoma"
+msgstr "Comunidad autónoma"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Autonomous island"
@@ -20624,7 +20624,7 @@ msgstr "Sector autónomo"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Autonomous territorial unit"
-msgstr "Unidad Territorial Autónoma"
+msgstr "Unidad territorial autónoma"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Autonomous territory"
@@ -20656,7 +20656,7 @@ msgstr "Ciudad capital"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Chains (of islands)"
-msgstr "Cadenas (de Islas)"
+msgstr "Cadenas (de islas)"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "City"
@@ -20676,11 +20676,11 @@ msgstr "Comuna"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Constitutional province"
-msgstr "Provincia Constitucional"
+msgstr "Provincia constitucional"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Council area"
-msgstr "Area de Consulado"
+msgstr "Area de consulado"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Country"
@@ -20700,7 +20700,7 @@ msgstr "Dependencia"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Development region"
-msgstr "Región de Desarrollo"
+msgstr "Región de desarrollo"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "District"
@@ -20744,7 +20744,7 @@ msgstr "Territorios federales"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Geographical entity"
-msgstr "Entidad Geográfica"
+msgstr "Entidad geográfica"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Geographical region"
@@ -20820,7 +20820,7 @@ msgstr "Área externa"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Overseas region/department"
-msgstr "región/departamento de ultramar"
+msgstr "Región/departamento de ultramar"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Overseas territorial collectivity"
@@ -20868,11 +20868,11 @@ msgstr "República"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Republican City"
-msgstr "Ciudad Republicana"
+msgstr "Republican City"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Self-governed part"
-msgstr "Parte Autogobernada"
+msgstr "Parte autogobernada"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Special District"
@@ -20896,7 +20896,7 @@ msgstr "Ciudad especial"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Special island authority"
-msgstr "Autoridad de Isla Especial"
+msgstr "Autoridad de isla especial"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Special zone"
@@ -20932,11 +20932,11 @@ msgstr "Autoridad unitaria"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Unitary authority (england)"
-msgstr "Autoridad Unitaria (england)"
+msgstr "Autoridad unitaria (Inglaterra)"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "Unitary authority (wales)"
-msgstr "Autoridad Unitaria (Gales)"
+msgstr "Autoridad unitaria (Gales)"
 
 msgctxt "selection:country.subdivision,type:"
 msgid "zone"

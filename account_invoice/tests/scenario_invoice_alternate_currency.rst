@@ -25,11 +25,11 @@ Create database::
 
 Install account_invoice::
 
-    >>> Module = Model.get('ir.module.module')
+    >>> Module = Model.get('ir.module')
     >>> account_invoice_module, = Module.find(
     ...     [('name', '=', 'account_invoice')])
     >>> account_invoice_module.click('install')
-    >>> Wizard('ir.module.module.install_upgrade').execute('upgrade')
+    >>> Wizard('ir.module.install_upgrade').execute('upgrade')
 
 Create company::
 
@@ -107,6 +107,7 @@ Create invoice with alternate currency::
     >>> line = invoice.lines.new()
     >>> line.product = product
     >>> line.quantity = 5
+    >>> line.unit_price = Decimal('80')
     >>> line.amount
     Decimal('400.00')
     >>> line = invoice.lines.new()
@@ -146,6 +147,7 @@ Create invoice with alternate currency and negative taxes::
     >>> line = invoice.lines.new()
     >>> line.product = product
     >>> line.quantity = 5
+    >>> line.unit_price = Decimal('80')
     >>> _ = line.taxes.pop(0)
     >>> line.taxes.append(negative_tax)
     >>> line.amount

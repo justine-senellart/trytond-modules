@@ -9,10 +9,10 @@ from sql import Literal, Null
 from sql.aggregate import Count, Sum
 from sql.conditionals import Coalesce, Case
 
-from trytond.model import Workflow, ModelView, ModelSQL, fields
+from trytond.model import Workflow, ModelView, ModelSQL, fields, Check
 from trytond.report import Report
 from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
-    Button
+    StateReport, Button
 from trytond import backend
 from trytond.pyson import If, Eval, Bool, Id
 from trytond.tools import reduce_ids, grouped_slice
@@ -250,9 +250,21 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
                         'tryton-go-previous'),
                     },
                 'validate_invoice': {
+                    'pre_validate':
+                        ['OR',
+                            ('invoice_date', '!=', None),
+                            ('type', 'not in',
+                                ['in_invoice', 'in_credit_note']),
+                        ],
                     'invisible': Eval('state') != 'draft',
                     },
                 'post': {
+                    'pre_validate':
+                        ['OR',
+                            ('invoice_date', '!=', None),
+                            ('type', 'not in',
+                                ['in_invoice', 'in_credit_note']),
+                        ],
                     'invisible': ~Eval('state').in_(['draft', 'validated']),
                     },
                 'pay': {
@@ -666,7 +678,7 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
         line = Line.__table__()
         tax = Tax.__table__()
 
-        invoice_query = Rule.domain_get('account.invoice')
+        invoice_query = Rule.query_get('account.invoice')
         Operator = fields.SQL_OPERATORS[clause[1]]
 
         union = (line.select(line.invoice.as_('invoice'),
@@ -691,7 +703,7 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
         type_name = cls.untaxed_amount._field.sql_type().base
         line = Line.__table__()
 
-        invoice_query = Rule.domain_get('account.invoice')
+        invoice_query = Rule.query_get('account.invoice')
         Operator = fields.SQL_OPERATORS[clause[1]]
 
         query = line.select(line.invoice,
@@ -709,7 +721,7 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
         type_name = cls.tax_amount._field.sql_type().base
         tax = Tax.__table__()
 
-        invoice_query = Rule.domain_get('account.invoice')
+        invoice_query = Rule.query_get('account.invoice')
         Operator = fields.SQL_OPERATORS[clause[1]]
 
         query = tax.select(tax.invoice,
@@ -964,7 +976,7 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
 
     @classmethod
     def view_attributes(cls):
-        return [('//field[@name="comment"]', 'spell', Eval('party_lang'))]
+        return [('/form//field[@name="comment"]', 'spell', Eval('party_lang'))]
 
     @classmethod
     def delete(cls, invoices):
@@ -1480,14 +1492,15 @@ class InvoiceLine(ModelSQL, ModelView, TaxableMixin):
     @classmethod
     def __setup__(cls):
         super(InvoiceLine, cls).__setup__()
+        t = cls.__table__()
         cls._sql_constraints += [
             ('type_account',
-                'CHECK((type = \'line\' AND account IS NOT NULL) '
-                'OR (type != \'line\'))',
+                Check(t, ((t.type == 'line') & (t.account != Null))
+                    | (t.type != 'line')),
                 'Line with "line" type must have an account.'),
             ('type_invoice',
-                'CHECK((type != \'line\' AND invoice IS NOT NULL) '
-                'OR (type = \'line\'))',
+                Check(t, ((t.type != 'line') & (t.invoice != Null))
+                    | (t.type == 'line')),
                 'Line without "line" type must have an invoice.'),
             ]
         cls._order.insert(0, ('sequence', 'ASC'))
@@ -1500,6 +1513,8 @@ class InvoiceLine(ModelSQL, ModelView, TaxableMixin):
                     '"%(line)s" on invoice "%(invoice)s" because the invoice '
                     'uses the same account (%(account)s).'),
                 })
+
+        cls._check_modify_exclude = {'note', 'origin'}
 
         # Set account domain dynamically for kind
         cls.account.domain = [
@@ -1562,7 +1577,7 @@ class InvoiceLine(ModelSQL, ModelView, TaxableMixin):
     @staticmethod
     def order_sequence(tables):
         table, _ = tables[None]
-        return [table.sequence == Null, table.sequence]
+        return [Case((table.sequence == Null, 0), else_=1), table.sequence]
 
     @staticmethod
     def default_currency():
@@ -1688,16 +1703,11 @@ class InvoiceLine(ModelSQL, ModelView, TaxableMixin):
         '''
         return {}
 
-    @fields.depends('product', 'unit', 'quantity', 'description',
-        '_parent_invoice.type', '_parent_invoice.party',
-        '_parent_invoice.currency', '_parent_invoice.currency_date',
-        'party', 'currency', 'invoice', 'invoice_type')
+    @fields.depends('product', 'unit', 'description', '_parent_invoice.type',
+        '_parent_invoice.party', 'party', 'invoice', 'invoice_type')
     def on_change_product(self):
         pool = Pool()
         Product = pool.get('product.product')
-        Company = pool.get('company.company')
-        Currency = pool.get('currency.currency')
-        Date = pool.get('ir.date')
 
         if not self.product:
             return
@@ -1711,31 +1721,11 @@ class InvoiceLine(ModelSQL, ModelView, TaxableMixin):
         if party and party.lang:
             context['language'] = party.lang.code
 
-        company = None
-        if Transaction().context.get('company'):
-            company = Company(Transaction().context['company'])
-        currency = None
-        currency_date = Date.today()
-        if self.invoice and self.invoice.currency_date:
-            currency_date = self.invoice.currency_date
-        # TODO check if today date is correct
-        if self.invoice and self.invoice.currency:
-            currency = self.invoice.currency
-        elif self.currency:
-            currency = self.currency
-
         if self.invoice and self.invoice.type:
             type_ = self.invoice.type
         else:
             type_ = self.invoice_type
         if type_ in ('in_invoice', 'in_credit_note'):
-            if company and currency:
-                with Transaction().set_context(date=currency_date):
-                    self.unit_price = Currency.compute(
-                        company.currency, self.product.cost_price,
-                        currency, round=False)
-            else:
-                self.unit_price = self.product.cost_price
             try:
                 self.account = self.product.account_expense_used
             except Exception:
@@ -1755,13 +1745,6 @@ class InvoiceLine(ModelSQL, ModelView, TaxableMixin):
                     taxes.extend(tax_ids)
             self.taxes = taxes
         else:
-            if company and currency:
-                with Transaction().set_context(date=currency_date):
-                    self.unit_price = Currency.compute(
-                        company.currency, self.product.list_price,
-                        currency, round=False)
-            else:
-                self.unit_price = self.product.list_price
             try:
                 self.account = self.product.account_revenue_used
             except Exception:
@@ -1789,9 +1772,6 @@ class InvoiceLine(ModelSQL, ModelView, TaxableMixin):
         if not self.unit or self.unit not in category.uoms:
             self.unit = self.product.default_uom.id
             self.unit_digits = self.product.default_uom.digits
-
-        self.type = 'line'
-        self.amount = self.on_change_with_amount()
 
     @fields.depends('product')
     def on_change_with_product_uom_category(self, name=None):
@@ -1840,22 +1820,24 @@ class InvoiceLine(ModelSQL, ModelView, TaxableMixin):
         return [(None, '')] + [(m.model, m.name) for m in models]
 
     @classmethod
-    def check_modify(cls, lines):
+    def check_modify(cls, lines, fields=None):
         '''
         Check if the lines can be modified
         '''
-        for line in lines:
-            if (line.invoice
-                    and line.invoice.state in ('posted', 'paid')):
-                cls.raise_user_error('modify', {
-                        'line': line.rec_name,
-                        'invoice': line.invoice.rec_name
-                        })
+        if fields is None or fields - cls._check_modify_exclude:
+            for line in lines:
+                if (line.invoice
+                        and line.invoice.state in ('posted', 'paid')):
+                    cls.raise_user_error('modify', {
+                            'line': line.rec_name,
+                            'invoice': line.invoice.rec_name
+                            })
 
     @classmethod
     def view_attributes(cls):
-        return [('//field[@name="note"]|//field[@name="description"]', 'spell',
-                If(Bool(Eval('_parent_invoice')),
+        return [
+            ('/form//field[@name="note"]|/form//field[@name="description"]',
+                'spell', If(Bool(Eval('_parent_invoice')),
                     Eval('_parent_invoice', {}).get('party_lang'),
                     Eval('party_lang')))]
 
@@ -1866,8 +1848,9 @@ class InvoiceLine(ModelSQL, ModelView, TaxableMixin):
 
     @classmethod
     def write(cls, *args):
-        lines = sum(args[0::2], [])
-        cls.check_modify(lines)
+        actions = iter(args)
+        for lines, values in zip(actions, actions):
+            cls.check_modify(lines, set(values))
         super(InvoiceLine, cls).write(*args)
 
     @classmethod
@@ -2080,7 +2063,7 @@ class InvoiceTax(ModelSQL, ModelView):
     @staticmethod
     def order_sequence(tables):
         table, _ = tables[None]
-        return [table.sequence == Null, table.sequence]
+        return [Case((table.sequence == Null, 0), else_=1), table.sequence]
 
     @staticmethod
     def default_base():
@@ -2258,7 +2241,7 @@ class PrintInvoice(Wizard):
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Print', 'print_', 'tryton-print', default=True),
             ])
-    print_ = StateAction('account_invoice.report_invoice')
+    print_ = StateReport('account.invoice')
 
     def transition_start(self):
         if len(Transaction().context['active_ids']) > 1:

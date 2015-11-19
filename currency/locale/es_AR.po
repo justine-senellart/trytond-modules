@@ -754,7 +754,7 @@ msgstr "Dólar de Trinidad y Tobago"
 
 msgctxt "model:currency.currency,name:twd"
 msgid "New Taiwan Dollar"
-msgstr "nuevo Dólar taiwanés"
+msgstr "Nuevo dólar taiwanés"
 
 msgctxt "model:currency.currency,name:tzs"
 msgid "Tanzanian Shilling"

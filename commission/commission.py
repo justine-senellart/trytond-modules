@@ -10,6 +10,7 @@ try:
 except ImportError:
     Null = None
 from sql.aggregate import Sum
+from sql.conditionals import Case
 
 from trytond.model import ModelView, ModelSQL, MatchMixin, fields
 from trytond.pyson import Eval, Bool, If, Id, PYSONEncoder
@@ -173,7 +174,7 @@ class PlanLines(ModelSQL, ModelView, MatchMixin):
     @staticmethod
     def order_sequence(tables):
         table, _ = tables[None]
-        return [table.sequence == Null, table.sequence]
+        return [Case((table.sequence == Null, 0), else_=1), table.sequence]
 
     @staticmethod
     def default_formula():
@@ -273,6 +274,11 @@ class Commission(ModelSQL, ModelView):
                 'agent': 'out',
                 'principal': 'in',
                 }.get(self.agent.type_)
+
+    @fields.depends('agent', 'product')
+    def on_change_agent(self):
+        if not self.product and self.agent and self.agent.plan:
+            self.product = self.agent.plan.commission_product
 
     def get_invoice_state(self, name):
         state = ''

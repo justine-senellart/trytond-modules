@@ -1,5 +1,7 @@
-Version 3.6.1 - 2015-07-13
+Version 3.8.0 - 2015-11-02
 * Bug fixes (see mercurial logs for details)
+* Change Party.lang into Property
+* Add a list of identifier to party
 
 Version 3.6.0 - 2015-04-20
 * Bug fixes (see mercurial logs for details)
