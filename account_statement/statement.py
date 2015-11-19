@@ -6,8 +6,9 @@ from itertools import groupby
 
 from sql import Null
 from sql.aggregate import Max, Sum
+from sql.conditionals import Case
 
-from trytond.model import Workflow, ModelView, ModelSQL, fields
+from trytond.model import Workflow, ModelView, ModelSQL, fields, Check
 from trytond.pyson import Eval, If, Bool
 from trytond.transaction import Transaction
 from trytond import backend
@@ -57,6 +58,7 @@ class Unequal(object):
 class Statement(Workflow, ModelSQL, ModelView):
     'Account Statement'
     __name__ = 'account.statement'
+
     name = fields.Char('Name', required=True)
     company = fields.Many2One('company.company', 'Company', required=True,
         select=True, states=_STATES, domain=[
@@ -328,6 +330,11 @@ class Statement(Workflow, ModelSQL, ModelView):
             for key, lines in groupby(self.lines, key=self._group_key):
                 yield Line(**dict(key + (('lines', list(lines)),)))
 
+    @fields.depends('journal')
+    def on_change_with_validation(self, name=None):
+        if self.journal:
+            return self.journal.validation
+
     @classmethod
     def delete(cls, statements):
         # Cancel before delete
@@ -558,15 +565,16 @@ class Line(ModelSQL, ModelView):
                 'amount_greater_invoice_amount_to_pay': ('Amount "%s" is '
                     'greater than the amount to pay of invoice.'),
                 })
+        t = cls.__table__()
         cls._sql_constraints += [
-            ('check_statement_line_amount', 'CHECK(amount != 0)',
+            ('check_statement_line_amount', Check(t, t.amount != 0),
                 'Amount should be a positive or negative value.'),
             ]
 
     @staticmethod
     def order_sequence(tables):
         table, _ = tables[None]
-        return [table.sequence == Null, table.sequence]
+        return [Case((table.sequence == Null, 0), else_=1), table.sequence]
 
     @staticmethod
     def default_amount():
