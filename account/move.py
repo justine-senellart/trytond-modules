@@ -10,7 +10,7 @@ from sql import Null
 from sql.aggregate import Sum
 from sql.conditionals import Coalesce, Case
 
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import ModelView, ModelSQL, fields, Check
 from trytond.wizard import Wizard, StateTransition, StateView, StateAction, \
     Button
 from trytond.report import Report
@@ -96,7 +96,7 @@ class Move(ModelSQL, ModelView):
                 'modify_posted_move': ('You can not modify move "%s" because '
                     'it is already posted.'),
                 'date_outside_period': ('You can not create move "%(move)s" '
-                    'because it\'s date is outside its period.'),
+                    'because its date is outside its period.'),
                 'draft_closed_period': ('You can not set to draft move '
                     '"%(move)s" because period "%(period)s" is closed.'),
                 'period_cancel': (
@@ -299,6 +299,7 @@ class Move(ModelSQL, ModelView):
         new_moves = []
         for move in moves:
             new_move, = super(Move, cls).copy([move], default=default)
+            Line.delete(new_move.lines)
             Line.copy(move.lines, default={
                     'move': new_move.id,
                     })
@@ -469,14 +470,14 @@ class Reconciliation(ModelSQL, ModelView):
                 'reconciliation_line_not_valid': ('You can not reconcile line '
                     '"%s" because it is not in valid state.'),
                 'reconciliation_different_accounts': ('You can not reconcile '
-                    'line "%(line)s" because it\'s account "%(account1)s" is '
+                    'line "%(line)s" because its account "%(account1)s" is '
                     'different from "%(account2)s".'),
                 'reconciliation_account_no_reconcile': (
                     'You can not reconcile '
-                    'line "%(line)s" because it\'s account "%(account)s" is '
+                    'line "%(line)s" because its account "%(account)s" is '
                     'configured as not reconcilable.'),
                 'reconciliation_different_parties': ('You can not reconcile '
-                    'line "%(line)s" because it\'s party "%(party1)s" is '
+                    'line "%(line)s" because its party "%(party1)s" is '
                     'different from "%(party2)s".'),
                 'reconciliation_unbalanced': ('You can not create a '
                     'reconciliation where debit "%(debit)s" and credit '
@@ -643,13 +644,14 @@ class Line(ModelSQL, ModelView):
         cls._reconciliation_modify_disallow = {
             'account', 'debit', 'credit', 'party',
             }
+        table = cls.__table__()
         cls._sql_constraints += [
             ('credit_debit',
-                'CHECK(credit * debit = 0.0)',
+                Check(table, table.credit * table.debit == 0),
                 'Wrong credit/debit values.'),
             ('second_currency_sign',
-                'CHECK(COALESCE(amount_second_currency, 0) '
-                '* (debit - credit) >= 0)',
+                Check(table, Coalesce(table.amount_second_currency, 0)
+                    * (table.debit - table.credit) >= 0),
                 'wrong_second_currency_sign'),
             ]
         cls.__rpc__.update({

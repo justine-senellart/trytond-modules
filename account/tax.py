@@ -3,10 +3,11 @@
 import datetime
 from collections import namedtuple
 from decimal import Decimal
+from itertools import groupby
 
 from sql import Null
 from sql.aggregate import Sum
-from itertools import groupby
+from sql.conditionals import Case
 
 from trytond.model import ModelView, ModelSQL, MatchMixin, fields
 from trytond.wizard import Wizard, StateView, StateAction, Button
@@ -207,7 +208,7 @@ class TaxCode(ModelSQL, ModelView):
                 ).join(move_line, condition=tax_line.move_line == move_line.id
                 ).select(code.id, Sum(tax_line.amount),
                 where=code.id.in_([c.id for c in all_codes])
-                & code.active & line_query,
+                & (code.active == True) & line_query,
                 group_by=code.id))
         code_sum = {}
         for code_id, sum in cursor.fetchall():
@@ -448,7 +449,7 @@ class TaxTemplate(ModelSQL, ModelView):
     @staticmethod
     def order_sequence(tables):
         table, _ = tables[None]
-        return [table.sequence == Null, table.sequence]
+        return [Case((table.sequence == Null, 0), else_=1), table.sequence]
 
     @staticmethod
     def default_type():
@@ -634,7 +635,7 @@ class Tax(ModelSQL, ModelView):
             },
         depends=['parent'],
         help=('If checked then the unit price for further tax computation will'
-            'be modified by this tax'))
+            ' be modified by this tax'))
     parent = fields.Many2One('account.tax', 'Parent', ondelete='CASCADE')
     childs = fields.One2Many('account.tax', 'parent', 'Children')
     company = fields.Many2One('company.company', 'Company', required=True,
@@ -770,7 +771,7 @@ class Tax(ModelSQL, ModelView):
     @staticmethod
     def order_sequence(tables):
         table, _ = tables[None]
-        return [table.sequence == Null, table.sequence]
+        return [Case((table.sequence == Null, 0), else_=1), table.sequence]
 
     @staticmethod
     def default_active():
@@ -1193,7 +1194,7 @@ class TaxLine(ModelSQL, ModelView):
     def on_change_tax(self):
         self.code = None
 
-    @fields.depends('_parent_move_line.account', 'move_line')
+    @fields.depends('_parent_move_line.account')
     def on_change_with_company(self, name=None):
         if self.move_line:
             return self.move_line.account.company.id
@@ -1284,6 +1285,10 @@ class TaxRule(ModelSQL, ModelView):
     @staticmethod
     def default_kind():
         return 'both'
+
+    @staticmethod
+    def default_company():
+        return Transaction().context.get('company')
 
     def apply(self, tax, pattern):
         '''
@@ -1405,7 +1410,7 @@ class TaxRuleLineTemplate(ModelSQL, ModelView):
     @staticmethod
     def order_sequence(tables):
         table, _ = tables[None]
-        return [table.sequence == Null, table.sequence]
+        return [Case((table.sequence == Null, 0), else_=1), table.sequence]
 
     def _get_tax_rule_line_value(self, rule_line=None):
         '''
@@ -1519,7 +1524,7 @@ class TaxRuleLine(ModelSQL, ModelView, MatchMixin):
     @staticmethod
     def order_sequence(tables):
         table, _ = tables[None]
-        return [table.sequence == Null, table.sequence]
+        return [Case((table.sequence == Null, 0), else_=1), table.sequence]
 
     def match(self, pattern):
         if 'group' in pattern and not self.group:

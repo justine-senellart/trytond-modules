@@ -1,8 +1,9 @@
 # This file is part of Tryton.  The COPYRIGHT file at the top level of
 # this repository contains the full copyright notices and license terms.
 from sql import Null
+from sql.conditionals import Case
 
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateTransition
 from trytond import backend
 from trytond.pyson import Eval, Bool
@@ -32,8 +33,9 @@ class JournalType(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(JournalType, cls).__setup__()
+        t = cls.__table__()
         cls._sql_constraints += [
-            ('code_uniq', 'UNIQUE(code)', 'The code must be unique.'),
+            ('code_uniq', Unique(t, t.code), 'The code must be unique.'),
             ]
         cls._order.insert(0, ('code', 'ASC'))
 
@@ -80,7 +82,7 @@ class JournalViewColumn(ModelSQL, ModelView):
     @staticmethod
     def order_sequence(tables):
         table, _ = tables[None]
-        return [table.sequence == Null, table.sequence]
+        return [Case((table.sequence == Null, 0), else_=1), table.sequence]
 
     @staticmethod
     def default_required():
@@ -199,8 +201,9 @@ class JournalPeriod(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(JournalPeriod, cls).__setup__()
+        t = cls.__table__()
         cls._sql_constraints += [
-            ('journal_period_uniq', 'UNIQUE(journal, period)',
+            ('journal_period_uniq', Unique(t, t.journal, t.period),
                 'You can only open one journal per period.'),
             ]
         cls._order.insert(0, ('name', 'ASC'))
