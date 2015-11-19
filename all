@@ -1,0 +1,11 @@
+#!/bin/sh
+
+for MOD_PATH in ./*
+do
+        if [ -d $MOD_PATH ]
+        then
+                cd $MOD_PATH
+                hg $*
+                cd ..
+        fi
+done
