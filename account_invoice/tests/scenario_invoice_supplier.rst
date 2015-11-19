@@ -23,11 +23,11 @@ Create database::
 
 Install account_invoice::
 
-    >>> Module = Model.get('ir.module.module')
+    >>> Module = Model.get('ir.module')
     >>> account_invoice_module, = Module.find(
     ...     [('name', '=', 'account_invoice')])
     >>> account_invoice_module.click('install')
-    >>> Wizard('ir.module.module.install_upgrade').execute('upgrade')
+    >>> Wizard('ir.module.install_upgrade').execute('upgrade')
 
 Create company::
 
@@ -104,6 +104,7 @@ Create invoice::
     >>> invoice.lines.append(line)
     >>> line.product = product
     >>> line.quantity = 5
+    >>> line.unit_price = Decimal('20')
     >>> line = InvoiceLine()
     >>> invoice.lines.append(line)
     >>> line.account = expense
@@ -178,6 +179,7 @@ Create a posted and a draft invoice  to cancel::
     >>> line = invoice.lines.new()
     >>> line.product = product
     >>> line.quantity = 1
+    >>> line.unit_price = Decimal('20')
     >>> invoice.click('post')
     >>> invoice_draft, = Invoice.duplicate([invoice])
 

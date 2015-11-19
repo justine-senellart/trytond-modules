@@ -1,5 +1,5 @@
-Version 3.6.1 - 2015-05-22
-* Bug fixes (see mercurial logs for details)
+* Don't set default unit price on invoice line
+* Allow to modify some fields of posted invoice line
 
 Version 3.6.0 - 2015-04-20
 * Bug fixes (see mercurial logs for details)
