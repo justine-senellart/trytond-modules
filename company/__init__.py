@@ -21,7 +21,6 @@ def register():
         Cron,
         CronCompany,
         PartyConfiguration,
-        Rule,
         module='company', type_='model')
     Pool.register(
         CompanyConfig,
