@@ -12,7 +12,7 @@ from sql.conditionals import Coalesce, Case
 from trytond.model import Workflow, ModelView, ModelSQL, fields, Check
 from trytond.report import Report
 from trytond.wizard import Wizard, StateView, StateTransition, StateAction, \
-    Button
+    StateReport, Button
 from trytond import backend
 from trytond.pyson import If, Eval, Bool, Id
 from trytond.tools import reduce_ids, grouped_slice
@@ -250,9 +250,21 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
                         'tryton-go-previous'),
                     },
                 'validate_invoice': {
+                    'pre_validate':
+                        ['OR',
+                            ('invoice_date', '!=', None),
+                            ('type', 'not in',
+                                ['in_invoice', 'in_credit_note']),
+                        ],
                     'invisible': Eval('state') != 'draft',
                     },
                 'post': {
+                    'pre_validate':
+                        ['OR',
+                            ('invoice_date', '!=', None),
+                            ('type', 'not in',
+                                ['in_invoice', 'in_credit_note']),
+                        ],
                     'invisible': ~Eval('state').in_(['draft', 'validated']),
                     },
                 'pay': {
@@ -964,7 +976,7 @@ class Invoice(Workflow, ModelSQL, ModelView, TaxableMixin):
 
     @classmethod
     def view_attributes(cls):
-        return [('//field[@name="comment"]', 'spell', Eval('party_lang'))]
+        return [('/form//field[@name="comment"]', 'spell', Eval('party_lang'))]
 
     @classmethod
     def delete(cls, invoices):
@@ -1823,8 +1835,9 @@ class InvoiceLine(ModelSQL, ModelView, TaxableMixin):
 
     @classmethod
     def view_attributes(cls):
-        return [('//field[@name="note"]|//field[@name="description"]', 'spell',
-                If(Bool(Eval('_parent_invoice')),
+        return [
+            ('/form//field[@name="note"]|/form//field[@name="description"]',
+                'spell', If(Bool(Eval('_parent_invoice')),
                     Eval('_parent_invoice', {}).get('party_lang'),
                     Eval('party_lang')))]
 
@@ -2228,7 +2241,7 @@ class PrintInvoice(Wizard):
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Print', 'print_', 'tryton-print', default=True),
             ])
-    print_ = StateAction('account_invoice.report_invoice')
+    print_ = StateReport('account.invoice')
 
     def transition_start(self):
         if len(Transaction().context['active_ids']) > 1:

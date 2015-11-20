@@ -40,7 +40,7 @@ msgstr "Modificado por usuario"
 
 msgctxt "field:bank.account,active:"
 msgid "Active"
-msgstr "Activo"
+msgstr "Activa"
 
 msgctxt "field:bank.account,bank:"
 msgid "Bank"

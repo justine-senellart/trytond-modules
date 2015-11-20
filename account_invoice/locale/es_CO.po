@@ -1316,20 +1316,12 @@ msgid "Draft Supplier Invoice"
 msgstr "Factura de Proveedor en Borrador"
 
 msgctxt "odt:account.invoice:"
-msgid "E-Mail:"
-msgstr "Correo electrónico:"
-
-msgctxt "odt:account.invoice:"
 msgid "Invoice N°:"
 msgstr "Factura N°:"
 
 msgctxt "odt:account.invoice:"
 msgid "Payment Term"
 msgstr "Forma de Pago"
-
-msgctxt "odt:account.invoice:"
-msgid "Phone:"
-msgstr "Teléfono:"
 
 msgctxt "odt:account.invoice:"
 msgid "Pro forma Credit Note"
@@ -1378,10 +1370,6 @@ msgstr "Total:"
 msgctxt "odt:account.invoice:"
 msgid "Unit Price"
 msgstr "Precio Unitario"
-
-msgctxt "odt:account.invoice:"
-msgid "VAT Number:"
-msgstr "Número Identificación:"
 
 msgctxt "odt:account.invoice:"
 msgid "VAT:"
@@ -1599,6 +1587,10 @@ msgctxt "view:account.configuration.tax_rounding:"
 msgid "Account Configuration Tax Roundings"
 msgstr "Configuración de Redondeo de Impuestos"
 
+msgctxt "view:account.configuration:"
+msgid "Invoice"
+msgstr ""
+
 msgctxt "view:account.invoice.credit.start:"
 msgid "Are you sure to credit those/this invoice(s)?"
 msgstr "Esta seguro que desea acreditar esta(s) facturas?"
@@ -1716,6 +1708,10 @@ msgid "Other Info"
 msgstr "Info Adicional"
 
 msgctxt "view:account.invoice:"
+msgid "Pay"
+msgstr ""
+
+msgctxt "view:account.invoice:"
 msgid "Payment"
 msgstr "Pago"
 
@@ -1726,22 +1722,6 @@ msgstr "Contabilizar"
 msgctxt "view:account.invoice:"
 msgid "Validate"
 msgstr "Validar"
-
-msgctxt "view:account.invoice:"
-msgid "_Cancel"
-msgstr "_Anular"
-
-msgctxt "view:account.invoice:"
-msgid "_Draft"
-msgstr "_Borrador"
-
-msgctxt "view:account.invoice:"
-msgid "_Pay"
-msgstr "_Pago"
-
-msgctxt "view:account.invoice:"
-msgid "_Post"
-msgstr "_Contabilizar"
 
 msgctxt "view:account.move.line:"
 msgid "Amount Second Currency"

@@ -28,7 +28,7 @@ msgstr "Nom"
 
 msgctxt "field:party.relation,to:"
 msgid "To"
-msgstr "à"
+msgstr "À"
 
 msgctxt "field:party.relation,type:"
 msgid "Type"

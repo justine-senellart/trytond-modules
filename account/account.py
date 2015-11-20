@@ -12,7 +12,7 @@ from sql.conditionals import Coalesce, Case
 
 from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.wizard import Wizard, StateView, StateAction, StateTransition, \
-    Button
+    StateReport, Button
 from trytond.report import Report
 from trytond.tools import reduce_ids, grouped_slice
 from trytond.pyson import Eval, PYSONEncoder, Date
@@ -43,7 +43,7 @@ def inactive_records(func):
 class TypeTemplate(ModelSQL, ModelView):
     'Account Type Template'
     __name__ = 'account.account.type.template'
-    name = fields.Char('Name', required=True, translate=True)
+    name = fields.Char('Name', required=True)
     parent = fields.Many2One('account.account.type.template', 'Parent',
             ondelete="RESTRICT")
     childs = fields.One2Many('account.account.type.template', 'parent',
@@ -129,8 +129,6 @@ class TypeTemplate(ModelSQL, ModelView):
         '''
         pool = Pool()
         Type = pool.get('account.account.type')
-        Lang = pool.get('ir.lang')
-        Config = pool.get('ir.configuration')
 
         if template2type is None:
             template2type = {}
@@ -142,24 +140,6 @@ class TypeTemplate(ModelSQL, ModelView):
 
             new_type, = Type.create([vals])
 
-            prev_lang = self._context.get('language') or Config.get_language()
-            prev_data = {}
-            for field_name, field in self._fields.iteritems():
-                if getattr(field, 'translate', False):
-                    prev_data[field_name] = getattr(self, field_name)
-            for lang in Lang.get_translatable_languages():
-                if lang == prev_lang:
-                    continue
-                with Transaction().set_context(language=lang):
-                    template = self.__class__(self.id)
-                    data = {}
-                    for field_name, field in template._fields.iteritems():
-                        if (getattr(field, 'translate', False)
-                                and (getattr(template, field_name) !=
-                                    prev_data[field_name])):
-                            data[field_name] = getattr(template, field_name)
-                    if data:
-                        Type.write([new_type], data)
             template2type[self.id] = new_type.id
         new_id = template2type[self.id]
 
@@ -173,7 +153,7 @@ class TypeTemplate(ModelSQL, ModelView):
 class Type(ModelSQL, ModelView):
     'Account Type'
     __name__ = 'account.account.type'
-    name = fields.Char('Name', size=None, required=True, translate=True)
+    name = fields.Char('Name', size=None, required=True)
     parent = fields.Many2One('account.account.type', 'Parent',
         ondelete="RESTRICT", domain=[
             ('company', '=', Eval('company')),
@@ -294,9 +274,6 @@ class Type(ModelSQL, ModelView):
         value, used to convert template id into type. The dictionary is filled
         with new types
         '''
-        pool = Pool()
-        Lang = pool.get('ir.lang')
-        Config = pool.get('ir.configuration')
 
         if template2type is None:
             template2type = {}
@@ -306,26 +283,6 @@ class Type(ModelSQL, ModelView):
             if vals:
                 self.write([self], vals)
 
-            prev_lang = self._context.get('language') or Config.get_language()
-            prev_data = {}
-            for field_name, field in self.template._fields.iteritems():
-                if getattr(field, 'translate', False):
-                    prev_data[field_name] = getattr(self.template, field_name)
-            for lang in Lang.get_translatable_languages():
-                if lang == prev_lang:
-                    continue
-                with Transaction().set_context(language=lang):
-                    type_ = self.__class__(self.id)
-                    data = {}
-                    for field_name, field in (
-                            type_.template._fields.iteritems()):
-                        if (getattr(field, 'translate', False)
-                                and (getattr(type_.template, field_name) !=
-                                    prev_data[field_name])):
-                            data[field_name] = getattr(type_.template,
-                                field_name)
-                    if data:
-                        self.write([type_], data)
             template2type[self.template.id] = self.id
 
         for child in self.childs:
@@ -354,8 +311,7 @@ class OpenType(Wizard):
 class AccountTemplate(ModelSQL, ModelView):
     'Account Template'
     __name__ = 'account.account.template'
-    name = fields.Char('Name', size=None, required=True, translate=True,
-            select=True)
+    name = fields.Char('Name', size=None, required=True, select=True)
     code = fields.Char('Code', size=None, select=True)
     type = fields.Many2One('account.account.type.template', 'Type',
         ondelete="RESTRICT",
@@ -480,8 +436,6 @@ class AccountTemplate(ModelSQL, ModelView):
         '''
         pool = Pool()
         Account = pool.get('account.account')
-        Lang = pool.get('ir.lang')
-        Config = pool.get('ir.configuration')
 
         if template2account is None:
             template2account = {}
@@ -498,24 +452,6 @@ class AccountTemplate(ModelSQL, ModelView):
 
             new_account, = Account.create([vals])
 
-            prev_lang = self._context.get('language') or Config.get_language()
-            prev_data = {}
-            for field_name, field in self._fields.iteritems():
-                if getattr(field, 'translate', False):
-                    prev_data[field_name] = getattr(self, field_name)
-            for lang in Lang.get_translatable_languages():
-                if lang == prev_lang:
-                    continue
-                with Transaction().set_context(language=lang):
-                    template = self.__class__(self.id)
-                    data = {}
-                    for field_name, field in self._fields.iteritems():
-                        if (getattr(field, 'translate', False)
-                                and (getattr(template, field_name) !=
-                                    prev_data[field_name])):
-                            data[field_name] = getattr(template, field_name)
-                    if data:
-                        Account.write([new_account], data)
             template2account[self.id] = new_account.id
         new_id = template2account[self.id]
 
@@ -562,8 +498,7 @@ class AccountTemplate(ModelSQL, ModelView):
 class Account(ModelSQL, ModelView):
     'Account'
     __name__ = 'account.account'
-    name = fields.Char('Name', size=None, required=True, translate=True,
-            select=True)
+    name = fields.Char('Name', size=None, required=True, select=True)
     code = fields.Char('Code', size=None, select=True)
     active = fields.Boolean('Active', select=True)
     company = fields.Many2One('company.company', 'Company', required=True,
@@ -868,8 +803,6 @@ class Account(ModelSQL, ModelView):
     def copy(cls, accounts, default=None):
         if default is None:
             default = {}
-        default['left'] = 0
-        default['right'] = 0
         default.setdefault('template')
         default.setdefault('deferrals', [])
         new_accounts = super(Account, cls).copy(accounts, default=default)
@@ -918,9 +851,6 @@ class Account(ModelSQL, ModelView):
         template2type is a dictionary with type template id as key and type id
         as value, used to convert type template id into type.
         '''
-        pool = Pool()
-        Lang = pool.get('ir.lang')
-        Config = pool.get('ir.configuration')
 
         if template2account is None:
             template2account = {}
@@ -938,26 +868,6 @@ class Account(ModelSQL, ModelView):
             if vals:
                 self.write([self], vals)
 
-            prev_lang = self._context.get('language') or Config.get_language()
-            prev_data = {}
-            for field_name, field in self.template._fields.iteritems():
-                if getattr(field, 'translate', False):
-                    prev_data[field_name] = getattr(self.template, field_name)
-            for lang in Lang.get_translatable_languages():
-                if lang == prev_lang:
-                    continue
-                with Transaction().set_context(language=lang):
-                    account = self.__class__(self.id)
-                    data = {}
-                    for field_name, field in (
-                            account.template._fields.iteritems()):
-                        if (getattr(field, 'translate', False)
-                                and (getattr(account.template, field_name) !=
-                                    prev_data[field_name])):
-                            data[field_name] = getattr(account.template,
-                                field_name)
-                    if data:
-                        self.write([account], data)
             template2account[self.template.id] = self.id
 
         for child in self.childs:
@@ -1146,7 +1056,7 @@ class PrintGeneralLedger(Wizard):
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Print', 'print_', 'tryton-print', default=True),
             ])
-    print_ = StateAction('account.report_general_ledger')
+    print_ = StateReport('account.general_ledger')
 
     def do_print_(self, action):
         if self.start.start_period:
@@ -1360,7 +1270,7 @@ class PrintTrialBalance(Wizard):
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Print', 'print_', 'tryton-print', default=True),
             ])
-    print_ = StateAction('account.report_trial_balance')
+    print_ = StateReport('account.trial_balance')
 
     def do_print_(self, action):
         if self.start.start_period:
@@ -1977,7 +1887,7 @@ class OpenThirdPartyBalance(Wizard):
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Print', 'print_', 'tryton-print', default=True),
             ])
-    print_ = StateAction('account.report_third_party_balance')
+    print_ = StateReport('account.third_party_balance')
 
     def do_print_(self, action):
         data = {
@@ -2106,7 +2016,7 @@ class OpenAgedBalance(Wizard):
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Print', 'print_', 'tryton-print', default=True),
             ])
-    print_ = StateAction('account.report_aged_balance')
+    print_ = StateReport('account.aged_balance')
 
     @classmethod
     def __setup__(cls):
