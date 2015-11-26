@@ -1,2 +1,2 @@
-*.pyc
 modules/*/.hg*
+*.pyc
