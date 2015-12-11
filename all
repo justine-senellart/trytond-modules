@@ -1,8 +1,11 @@
 #!/bin/sh
 
-for MOD_PATH in ./modules/*
+for MOD_PATH in ./*
 do
-        cd $MOD_PATH
-        hg $*
-        cd ../..
+        if [ -d $MOD_PATH ]
+        then
+                cd $MOD_PATH
+                hg $*
+                cd ..
+        fi
 done
