@@ -12,12 +12,14 @@ def create_company(party=None, currency=None, config=None):
     "Create the company using the proteus config"
     Party = Model.get('party.party', config=config)
     User = Model.get('res.user', config=config)
+    Lang = Model.get('ir.lang')
 
     company_config = Wizard('company.company.config')
     company_config.execute('company')
     company = company_config.form
     if not party:
         party = Party(name='Dunder Mifflin')
+        party.lang = Lang.find([])[0]
         party.save()
     company.party = party
     if not currency:
