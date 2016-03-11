@@ -1915,35 +1915,26 @@ class ThirdPartyBalance(Report):
         Move = pool.get('account.move')
         Account = pool.get('account.account')
         Company = pool.get('company.company')
-        Date = pool.get('ir.date')
         cursor = Transaction().cursor
 
         line = MoveLine.__table__()
         move = Move.__table__()
         account = Account.__table__()
 
+        report_context.update(data)
         company = Company(data['company'])
         report_context['company'] = company
         report_context['digits'] = company.currency.digits
-        report_context['fiscalyear'] = data['fiscalyear']
-        with Transaction().set_context(context=report_context):
-            line_query, _ = MoveLine.query_get(line)
-        if data['posted']:
-            posted_clause = move.state == 'posted'
-        else:
-            posted_clause = Literal(True)
 
-        cursor.execute(*line.join(move, condition=line.move == move.id
-                ).join(account, condition=line.account == account.id
-                ).select(line.party, Sum(line.debit), Sum(line.credit),
-                where=(line.party != Null)
-                & (account.active == True)
-                & account.kind.in_(('payable', 'receivable'))
-                & (account.company == data['company'])
-                & ((line.maturity_date <= Date.today())
-                    | (line.maturity_date == Null))
-                & line_query & posted_clause,
-                group_by=line.party,
+        tables = {
+            'account.move': move,
+            'account.move.line': line,
+            'account.account': account,
+            }
+        query_table = cls.get_query_table(tables)
+        where_clause = cls.get_query_where(tables, report_context)
+        cursor.execute(*query_table.select(line.party, Sum(line.debit),
+                Sum(line.credit), where=where_clause, group_by=line.party,
                 having=(Sum(line.debit) != 0) | (Sum(line.credit) != 0)))
 
         res = cursor.fetchall()
@@ -1963,6 +1954,38 @@ class ThirdPartyBalance(Report):
         report_context['records'] = objects
 
         return report_context
+
+    @classmethod
+    def get_query_table(cls, tables):
+        move = tables['account.move']
+        line = tables['account.move.line']
+        account = tables['account.account']
+        return line.join(move, condition=line.move == move.id
+            ).join(account, condition=line.account == account.id)
+
+    @classmethod
+    def get_query_where(cls, tables, report_context):
+        pool = Pool()
+        Date = pool.get('ir.date')
+        MoveLine = pool.get('account.move.line')
+
+        move = tables['account.move']
+        line = tables['account.move.line']
+        account = tables['account.account']
+
+        with Transaction().set_context(context=report_context):
+            where, _ = MoveLine.query_get(line)
+
+        if report_context['posted']:
+            where &= (move.state == 'posted')
+
+        where &= ((line.party != Null)
+            & account.active
+            & account.kind.in_(('payable', 'receivable'))
+            & (account.company == report_context['company'].id)
+            & ((line.maturity_date <= Date.today())
+                | (line.maturity_date == Null)))
+        return where
 
 
 class OpenAgedBalanceStart(ModelView):
