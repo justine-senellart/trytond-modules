@@ -1,0 +1,84 @@
+[submodule "modules/account"]
+	path = modules/account
+	url = git@github.com:coopengo/account.git
+	branch = master
+[submodule "modules/account_dunning"]
+	path = modules/account_dunning
+	url = git@github.com:coopengo/account_dunning.git
+	branch = master
+[submodule "modules/account_dunning_letter"]
+	path = modules/account_dunning_letter
+	url = git@github.com:coopengo/account_dunning_letter.git
+	branch = master
+[submodule "modules/account_invoice"]
+	path = modules/account_invoice
+	url = git@github.com:coopengo/account_invoice.git
+	branch = master
+[submodule "modules/account_payment"]
+	path = modules/account_payment
+	url = git@github.com:coopengo/account_payment.git
+	branch = master
+[submodule "modules/account_payment_clearing"]
+	path = modules/account_payment_clearing
+	url = git@github.com:coopengo/account_payment_clearing.git
+	branch = master
+[submodule "modules/account_payment_sepa"]
+	path = modules/account_payment_sepa
+	url = git@github.com:coopengo/account_payment_sepa.git
+	branch = master
+[submodule "modules/account_payment_sepa_cfonb"]
+	path = modules/account_payment_sepa_cfonb
+	url = git@github.com:coopengo/account_payment_sepa_cfonb.git
+	branch = master
+[submodule "modules/account_product"]
+	path = modules/account_product
+	url = git@github.com:coopengo/account_product.git
+	branch = master
+[submodule "modules/account_statement"]
+	path = modules/account_statement
+	url = git@github.com:coopengo/account_statement.git
+	branch = master
+[submodule "modules/bank"]
+	path = modules/bank
+	url = git@github.com:coopengo/bank.git
+	branch = master
+[submodule "modules/commission"]
+	path = modules/commission
+	url = git@github.com:coopengo/commission.git
+	branch = master
+[submodule "modules/commission_waiting"]
+	path = modules/commission_waiting
+	url = git@github.com:coopengo/commission_waiting.git
+	branch = master
+[submodule "modules/company"]
+	path = modules/company
+	url = git@github.com:coopengo/company.git
+	branch = master
+[submodule "modules/country"]
+	path = modules/country
+	url = git@github.com:coopengo/country.git
+	branch = master
+[submodule "modules/currency"]
+	path = modules/currency
+	url = git@github.com:coopengo/currency.git
+	branch = master
+[submodule "modules/ldap_authentication"]
+	path = modules/ldap_authentication
+	url = git@github.com:coopengo/ldap_authentication.git
+	branch = master
+[submodule "modules/party"]
+	path = modules/party
+	url = git@github.com:coopengo/party.git
+	branch = master
+[submodule "modules/party_relationship"]
+	path = modules/party_relationship
+	url = git@github.com:coopengo/party_relationship.git
+	branch = master
+[submodule "modules/party_siret"]
+	path = modules/party_siret
+	url = git@github.com:coopengo/party_siret.git
+	branch = master
+[submodule "modules/product"]
+	path = modules/product
+	url = git@github.com:coopengo/product.git
+	branch = master

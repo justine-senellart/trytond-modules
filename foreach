@@ -1,0 +1,12 @@
+#!/bin/sh
+
+l=`ls -1 modules`
+
+for f in $l
+do
+        echo
+        echo $f
+        cd modules/$f
+        git $*
+        cd ../..
+done
