@@ -82,3 +82,6 @@
 	path = modules/product
 	url = git@github.com:coopengo/product.git
 	branch = master
+[submodule "debug"]
+	path = modules/debug
+	url = git@github.com:coopengo/trytond-debug.git
