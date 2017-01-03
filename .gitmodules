@@ -82,9 +82,12 @@
 	path = modules/product
 	url = git@github.com:coopengo/product.git
 	branch = master
-[submodule "debug"]
+[submodule "modules/debug"]
 	path = modules/debug
 	url = git@github.com:coopengo/trytond-debug.git
 [submodule "modules/note_authorizations"]
 	path = modules/note_authorizations
+	url = git@github.com:coopengo/trytond-note-authorizations.git
+[submodule "modules/node-authorizations"]
+	path = modules/node-authorizations
 	url = git@github.com:coopengo/trytond-note-authorizations.git
