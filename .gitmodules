@@ -1,90 +1,69 @@
-[submodule "modules/account"]
+[submodule "account"]
 	path = modules/account
 	url = git@github.com:coopengo/account.git
-	branch = master
-[submodule "modules/account_dunning"]
+[submodule "account_dunning"]
 	path = modules/account_dunning
 	url = git@github.com:coopengo/account_dunning.git
-	branch = master
-[submodule "modules/account_dunning_letter"]
+[submodule "account_dunning_letter"]
 	path = modules/account_dunning_letter
 	url = git@github.com:coopengo/account_dunning_letter.git
-	branch = master
-[submodule "modules/account_invoice"]
+[submodule "account_invoice"]
 	path = modules/account_invoice
 	url = git@github.com:coopengo/account_invoice.git
-	branch = master
-[submodule "modules/account_payment"]
+[submodule "account_payment"]
 	path = modules/account_payment
 	url = git@github.com:coopengo/account_payment.git
-	branch = master
-[submodule "modules/account_payment_clearing"]
+[submodule "account_payment_clearing"]
 	path = modules/account_payment_clearing
 	url = git@github.com:coopengo/account_payment_clearing.git
-	branch = master
-[submodule "modules/account_payment_sepa"]
+[submodule "account_payment_sepa"]
 	path = modules/account_payment_sepa
 	url = git@github.com:coopengo/account_payment_sepa.git
-	branch = master
-[submodule "modules/account_payment_sepa_cfonb"]
+[submodule "account_payment_sepa_cfonb"]
 	path = modules/account_payment_sepa_cfonb
 	url = git@github.com:coopengo/account_payment_sepa_cfonb.git
-	branch = master
-[submodule "modules/account_product"]
+[submodule "account_product"]
 	path = modules/account_product
 	url = git@github.com:coopengo/account_product.git
-	branch = master
-[submodule "modules/account_statement"]
+[submodule "account_statement"]
 	path = modules/account_statement
 	url = git@github.com:coopengo/account_statement.git
-	branch = master
-[submodule "modules/bank"]
+[submodule "bank"]
 	path = modules/bank
 	url = git@github.com:coopengo/bank.git
-	branch = master
-[submodule "modules/commission"]
+[submodule "commission"]
 	path = modules/commission
 	url = git@github.com:coopengo/commission.git
-	branch = master
-[submodule "modules/commission_waiting"]
+[submodule "commission_waiting"]
 	path = modules/commission_waiting
 	url = git@github.com:coopengo/commission_waiting.git
-	branch = master
-[submodule "modules/company"]
+[submodule "company"]
 	path = modules/company
 	url = git@github.com:coopengo/company.git
-	branch = master
-[submodule "modules/country"]
+[submodule "country"]
 	path = modules/country
 	url = git@github.com:coopengo/country.git
-	branch = master
-[submodule "modules/currency"]
+[submodule "currency"]
 	path = modules/currency
 	url = git@github.com:coopengo/currency.git
-	branch = master
-[submodule "modules/ldap_authentication"]
+[submodule "ldap_authentication"]
 	path = modules/ldap_authentication
 	url = git@github.com:coopengo/ldap_authentication.git
-	branch = master
-[submodule "modules/party"]
+[submodule "party"]
 	path = modules/party
 	url = git@github.com:coopengo/party.git
-	branch = master
-[submodule "modules/party_relationship"]
+[submodule "party_relationship"]
 	path = modules/party_relationship
 	url = git@github.com:coopengo/party_relationship.git
-	branch = master
-[submodule "modules/party_siret"]
+[submodule "party_siret"]
 	path = modules/party_siret
 	url = git@github.com:coopengo/party_siret.git
-	branch = master
-[submodule "modules/product"]
+[submodule "product"]
 	path = modules/product
 	url = git@github.com:coopengo/product.git
-	branch = master
-[submodule "modules/debug"]
+[submodule "debug"]
 	path = modules/debug
 	url = git@github.com:coopengo/trytond-debug.git
-[submodule "modules/note_authorizations"]
+[submodule "note_authorizations"]
 	path = modules/note_authorizations
 	url = git@github.com:coopengo/trytond-note-authorizations.git
