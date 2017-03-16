@@ -70,3 +70,6 @@
 [submodule "bench"]
 	path = modules/bench
 	url = git@github.com:coopengo/trytond-bench.git
+[submodule "cryptolog"]
+	path = modules/cryptolog
+	url = git@github.com:coopengo/trytond-cryptolog.git
