@@ -73,6 +73,6 @@
 [submodule "cryptolog"]
 	path = modules/cryptolog
 	url = git@github.com:coopengo/trytond-cryptolog.git
-[submodule "account_payment_paybox"]
-	path = account_payment_paybox
+[submodule "modules/account_payment_paybox"]
+	path = modules/account_payment_paybox
 	url = git@github.com:coopengo/trytond-account-payment-paybox.git
