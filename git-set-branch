@@ -1,9 +1,27 @@
 #!/bin/sh
 
 [ -z "$1" ] && echo missing branch && exit 1
+branch="$1"
 
-git submodule foreach git fetch -p &&
-	git submodule foreach git checkout "$1" &&
-	git submodule foreach git merge origin/"$1" &&
-	git status
+fetch() {
+    echo Fetch submodules
+    git submodule -q foreach git fetch -q -p
+}
 
+checkout() {
+    echo Checkout submodules
+    git submodule -q foreach git checkout -q "$branch"
+}
+
+update() {
+    echo Merge submodules
+    git submodule -q foreach git merge -q --ff-only origin/"$branch"
+}
+
+summary() {
+    echo
+    echo Current state
+    git status -s
+}
+
+fetch && checkout && update && summary
