@@ -76,3 +76,6 @@
 [submodule "account_payment_paybox"]
 	path = modules/account_payment_paybox
 	url = git@github.com:coopengo/trytond-account-payment-paybox.git
+[submodule "api_token"]
+	path = modules/api_token
+	url = git@github.com:coopengo/trytond-api-token.git
