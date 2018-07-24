@@ -79,3 +79,9 @@
 [submodule "api_token"]
 	path = modules/api_token
 	url = git@github.com:coopengo/trytond-api-token.git
+[submodule "modules/analytic_account"]
+	path = modules/analytic_account
+	url = git@github.com:coopengo/analytic_account.git
+[submodule "modules/analytic_invoice"]
+	path = modules/analytic_invoice
+	url = git@github.com:coopengo/analytic_invoice.git
