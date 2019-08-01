@@ -85,3 +85,6 @@
 [submodule "modules/analytic_invoice"]
 	path = modules/analytic_invoice
 	url = git@github.com:coopengo/analytic_invoice.git
+[submodule "modules/account_tax_rule_country"]
+	path = modules/account_tax_rule_country
+	url = git@github.com:coopengo/account_tax_rule_country.git
