@@ -88,3 +88,6 @@
 [submodule "modules/account_tax_rule_country"]
 	path = modules/account_tax_rule_country
 	url = git@github.com:coopengo/account_tax_rule_country.git
+[submodule "modules/trytond_electronic_signature"]
+	path = modules/trytond_electronic_signature
+	url = git@github.com:coopengo/trytond_electronic_signature.git
