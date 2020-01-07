@@ -91,3 +91,6 @@
 [submodule "electronic_signature"]
 	path = modules/electronic_signature
 	url = git@github.com:coopengo/trytond_electronic_signature.git
+[submodule "modules/user_role"]
+	path = modules/user_role
+	url = git@github.com:coopengo/user_role.git
