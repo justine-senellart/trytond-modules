@@ -54,7 +54,7 @@ trigger:security:test:
       do
         curl -X POST \
           --fail \
-          -F "token=${CI_JOB_TOKEN}" \
+          -F "token=${PROJECT_TRIGGER_TOKEN}" \
           -F "ref=${BRANCH}" \
           https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       done
