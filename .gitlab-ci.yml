@@ -60,3 +60,4 @@ trigger:security:test:
       done
   rules:
     - if: '$CI_PIPELINE_SOURCE =~ /^(web|schedule)$/ && $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+
