@@ -53,7 +53,6 @@ trigger:security:test:
       for BRANCH in $(git ls-remote --head origin -l "coog-*" | cut -d '/' -f3 | grep -E '^(coog-[[:digit:]]{1,2}.[[:digit:]]{1,3})$' | sort -Vr | head -n 4)
       do
         curl -X POST \
-          --fail \
           -F "token=${PROJECT_TRIGGER_TOKEN}" \
           -F "ref=${BRANCH}" \
           https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
