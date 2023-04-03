@@ -132,10 +132,8 @@ class Statement(Workflow, ModelSQL, ModelView):
         super(Statement, cls).__setup__()
         cls._order[0] = ('id', 'DESC')
         cls._transitions |= set((
-                ('draft', 'validated'),
+                ('draft', 'posted'),
                 ('draft', 'cancelled'),
-                ('validated', 'posted'),
-                ('validated', 'cancelled'),
                 ('cancelled', 'draft'),
                 ))
         cls._buttons.update({
@@ -143,12 +141,8 @@ class Statement(Workflow, ModelSQL, ModelView):
                     'invisible': Eval('state') != 'cancelled',
                     'depends': ['state'],
                     },
-                'validate_statement': {
-                    'invisible': Eval('state') != 'draft',
-                    'depends': ['state'],
-                    },
                 'post': {
-                    'invisible': Eval('state') != 'validated',
+                    'invisible': Eval('state') != 'draft',
                     'depends': ['state'],
                     },
                 'cancel': {
@@ -156,7 +150,7 @@ class Statement(Workflow, ModelSQL, ModelView):
                     'depends': ['state'],
                     },
                 'reconcile': {
-                    'invisible': Eval('state').in_(['draft', 'cancelled']),
+                    'invisible': Eval('state').in_(['draft']),
                     'readonly': ~Eval('to_reconcile'),
                     'depends': ['state', 'to_reconcile'],
                     },
@@ -463,8 +457,6 @@ class Statement(Workflow, ModelSQL, ModelView):
                     n=self.number_of_lines - number))
 
     @classmethod
-    @ModelView.button
-    @Workflow.transition('validated')
     def validate_statement(cls, statements):
         pool = Pool()
         Line = pool.get('account.statement.line')
@@ -610,6 +602,7 @@ class Statement(Workflow, ModelSQL, ModelView):
         pool = Pool()
         Lang = pool.get('ir.lang')
         StatementLine = pool.get('account.statement.line')
+        cls.validate_statement(statements)
         for statement in statements:
             for origin in statement.origins:
                 if origin.pending_amount:
